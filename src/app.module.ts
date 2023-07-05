@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config'
 import { BotModule } from './module/bot/bot.module';
 import { LoggerModule } from './module/logger/logger.module';
+import { DistubeModule } from './common/providers/distube/distube.module';
 import enviromenConfig from './common/config/enviromen.config';
 
 @Module({
@@ -16,7 +17,8 @@ import enviromenConfig from './common/config/enviromen.config';
     }),
     DiscordModule.forRootAsync(discordConfig),
     BotModule,
-    LoggerModule],
+    LoggerModule,
+    DistubeModule],
   controllers: [AppController],
   providers: [AppService],
 })

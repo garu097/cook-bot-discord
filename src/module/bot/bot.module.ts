@@ -1,3 +1,4 @@
+import { DistubeModule } from './../../common/providers/distube/distube.module';
 
 import { PlaylistCommand } from './command/playlist.command';
 import { PlayCommand } from './command/play.command';
@@ -8,7 +9,8 @@ import { HelpCommand } from './command/help.command';
 import { LoggerModule } from '../logger/logger.module';
 
 @Module({
-  imports: [DiscordModule.forFeature(), LoggerModule],
-  providers: [BotGateway, PlayCommand, PlaylistCommand, HelpCommand]
+  imports: [DiscordModule.forFeature(), LoggerModule, DistubeModule],
+  providers: [BotGateway, PlayCommand, PlaylistCommand, HelpCommand],
+  exports: [BotGateway]
 })
 export class BotModule {}

@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config';
-import { DiscordModuleAsyncOptions, DiscordModuleOption } from "@discord-nestjs/core";
-import { GatewayIntentBits } from 'discord.js';
+import { DiscordModuleAsyncOptions } from "@discord-nestjs/core";
+import { GatewayIntentBits} from 'discord.js';
 
 export const discordConfig: DiscordModuleAsyncOptions = {
     inject: [ConfigService],
@@ -10,9 +10,12 @@ export const discordConfig: DiscordModuleAsyncOptions = {
             discordClientOptions: {
                 intents: [
                     GatewayIntentBits.Guilds,
+                    GatewayIntentBits.GuildMembers,
                     GatewayIntentBits.GuildMessages,
-                    GatewayIntentBits.MessageContent
-                ]
+                    GatewayIntentBits.GuildModeration,
+                    GatewayIntentBits.MessageContent,
+                    GatewayIntentBits.GuildVoiceStates
+                ],
             },
             // autoLogin: true,
         }
