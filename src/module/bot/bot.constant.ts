@@ -12,6 +12,14 @@ export const COMMAND:ICommand = {
     PLAY_LIST: {
         name: 'playlist',
         description: 'Get current playlist',
+    },
+    PAUSE: {
+        name: 'pause',
+        description: 'Pause current song',
+    },
+    RESUME: {
+        name: 'resume',
+        description: 'Resume current song',
     }
 }
 

@@ -3,6 +3,7 @@ import { DisTube, DisTubeOptions } from 'distube';
 import { Injectable } from '@nestjs/common';
 import { InjectDiscordClient } from '@discord-nestjs/core';
 import { YoutubeService, SpotifyService, SoundcloudService } from './distube-plugin.service';
+import { cookies } from 'src/common/assets/cookies';
 
 
 @Injectable()
@@ -17,7 +18,8 @@ export class DistubeService extends DisTube {
             emitNewSongOnly: true,
             emitAddSongWhenCreatingQueue: false,
             emitAddListWhenCreatingQueue: false,
-            plugins: [youtube, soundCloud, spotify]
+            plugins: [youtube, soundCloud, spotify],
+            youtubeCookie: cookies
         }
 
         super(client, configDistube)

@@ -14,6 +14,7 @@ import { PlayDto } from '../dto/play.dto';
 import { COMMAND } from '../bot.constant';
 import { DistubeService } from 'src/common/providers/distube/distube.service';
 import { PLAY_MUSIC } from 'src/common/constant/message.constant';
+import { SearchResultVideo } from 'distube';
 
 @Injectable()
 @Command(COMMAND.PLAY)
@@ -40,6 +41,9 @@ export class PlayCommand {
       console.log(e)
       return await interaction.channel.send(INTERNAL_ERROR)
     }
-    
+  }
+
+  playMusic(results: SearchResultVideo[]) {
+
   }
 }
