@@ -1,5 +1,5 @@
 
-import { COMMAND_ERROR, INTERNAL_ERROR } from './../../../common/constant/error.constant';
+import { COMMAND_ERROR } from 'src/common/constant/error.constant';
 import {  Injectable, UseInterceptors } from '@nestjs/common';
 import { SlashCommandPipe, CollectorInterceptor } from '@discord-nestjs/common';
 
@@ -14,13 +14,14 @@ import { PlayDto } from '../dto/play.dto';
 import { COMMAND } from '../bot.constant';
 import { DistubeService } from 'src/common/providers/distube/distube.service';
 import { PLAY_MUSIC } from 'src/common/constant/message.constant';
-import { SearchResultVideo } from 'distube';
+import { isValidHttpUrl } from 'src/common/utils';
+import { LoggerService } from 'src/module/logger/logger.service';
 
 @Injectable()
 @Command(COMMAND.PLAY)
 @UseInterceptors(CollectorInterceptor)
 export class PlayCommand {
-  constructor(private readonly distube: DistubeService) {}
+  constructor(private readonly distube: DistubeService, private readonly logger: LoggerService) {}
 
   @Handler()
   async onPlayCommand(
@@ -28,22 +29,24 @@ export class PlayCommand {
     @IA() interaction: CommandInteraction,
   ){
     try {
+      await interaction.deferReply()
       const member: GuildMember = await interaction.guild.members.fetch({ user: interaction.user });
       const channel: VoiceBasedChannel = member.voice.channel
       if(!channel)
-          return await interaction.reply({ content: COMMAND_ERROR.NOT_IN_CHANNEL })
+          return await interaction.reply({ content: COMMAND_ERROR.NOT_IN_CHANNEL,  ephemeral: true })
+
+      if(isValidHttpUrl(dto.song)) {
+        await this.distube.play(channel, dto.song)
+        return await interaction.editReply({ content: `${PLAY_MUSIC} ${dto.song}`})
+      } 
 
       const results = await this.distube.search(dto.song)
-      this.distube.play(channel, results[0])
-
-      return await interaction.reply({ content: `${PLAY_MUSIC} ${results[0].name}` })
+      await this.distube.play(channel, results[0])
+      return await interaction.editReply({ content: `${PLAY_MUSIC} ${results[0].name} - ${results[0].source} \n ${results[0].url}` })
+      
     } catch (e) {
-      console.log(e)
-      return await interaction.channel.send(INTERNAL_ERROR)
+      this.logger.error(e)
+      return await interaction.editReply({ content: COMMAND_ERROR.CANNOT_PLAY_SONG })
     }
-  }
-
-  playMusic(results: SearchResultVideo[]) {
-
   }
 }

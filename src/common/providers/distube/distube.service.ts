@@ -19,7 +19,7 @@ export class DistubeService extends DisTube {
             emitAddSongWhenCreatingQueue: false,
             emitAddListWhenCreatingQueue: false,
             plugins: [youtube, soundCloud, spotify],
-            youtubeCookie: cookies
+            youtubeCookie: cookies,
         }
 
         super(client, configDistube)

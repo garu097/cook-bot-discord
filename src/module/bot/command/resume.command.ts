@@ -1,5 +1,5 @@
-import { RESUME_MUSIC } from './../../../common/constant/message.constant';
-import { COMMAND_ERROR } from './../../../common/constant/error.constant';
+import { RESUME_MUSIC } from 'src/common/constant/message.constant';
+import { COMMAND_ERROR } from 'src/common/constant/error.constant';
 import { CommandInteraction } from 'discord.js';
 import { CollectorInterceptor } from '@discord-nestjs/common';
 import { COMMAND } from './../bot.constant';
@@ -18,9 +18,9 @@ export class ResumeCommand {
     async onResume(
     @IA() interaction: CommandInteraction) {
         const queue = this.distube.getQueue(interaction.channel)
-        if(!queue) return await interaction.reply({ content: COMMAND_ERROR.EMPTY_QUEUE })
-        if(!queue.paused) return await interaction.reply({ content: COMMAND_ERROR.NOT_PAUSE })
+        if(!queue) return await interaction.reply({ content: COMMAND_ERROR.EMPTY_QUEUE, ephemeral: true })
+        if(!queue.paused) return await interaction.reply({ content: COMMAND_ERROR.NOT_PAUSE, ephemeral: true })
         queue.resume()
-        return await interaction.reply({ content: RESUME_MUSIC })
+        return await interaction.reply({ content: RESUME_MUSIC, ephemeral: true })
     }
 }
