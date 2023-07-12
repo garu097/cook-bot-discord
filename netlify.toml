@@ -1,5 +1,0 @@
-[env]
-  PORT = "8080"
-
-[context.production]
-  command = "yarn start:prod"
