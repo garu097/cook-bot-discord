@@ -41,6 +41,7 @@
     "sodium": "^3.0.2"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.3.3",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
