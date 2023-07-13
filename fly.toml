@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for cookbot on 2023-07-12T14:19:53+07:00
+# fly.toml app configuration file generated for cookbot on 2023-07-13T09:29:33+07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -7,7 +7,7 @@ app = "cookbot"
 primary_region = "sin"
 
 [env]
-  YTDL_NO_UPDATE=1
+  YTDL_NO_UPDATE = "1"
 
 [http_service]
   internal_port = 3000

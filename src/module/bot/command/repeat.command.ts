@@ -32,6 +32,6 @@ export class RepeatCommand {
     }
     mode = queue.setRepeatMode(mode)
     const mess = mode ? (mode === 2 ? REPEAT_QUEUE : REPEAT_SONG) : REPEAT_OFF
-    return await interaction.reply({ content: mess })
+    return await interaction.reply({ content: mess, ephemeral: true  })
   }
 }

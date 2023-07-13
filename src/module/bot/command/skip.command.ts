@@ -23,7 +23,7 @@ export class SkipCommand {
             const song = await queue.skip()
             return await interaction.reply({content:`${SKIP_SONG}\n${song.name}`, ephemeral: true})
           } catch (e) {
-            return interaction.reply(`${e}`)
+            return interaction.reply({ content: `${e}`, ephemeral: true })
           }
     }
 }

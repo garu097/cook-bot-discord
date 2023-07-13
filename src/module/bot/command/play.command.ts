@@ -29,11 +29,11 @@ export class PlayCommand {
     @IA() interaction: CommandInteraction,
   ){
     try {
-      await interaction.deferReply()
+      await interaction.deferReply({ ephemeral: true })
       const member: GuildMember = await interaction.guild.members.fetch({ user: interaction.user });
       const channel: VoiceBasedChannel = member.voice.channel
       if(!channel)
-          return await interaction.reply({ content: COMMAND_ERROR.NOT_IN_CHANNEL,  ephemeral: true })
+          return await interaction.editReply({ content: COMMAND_ERROR.NOT_IN_CHANNEL })
 
       if(isValidHttpUrl(dto.song)) {
         await this.distube.play(channel, dto.song)
