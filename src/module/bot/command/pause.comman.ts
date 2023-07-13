@@ -28,6 +28,5 @@ export class PauseCommand {
             this.logger.error(e)
             return INTERNAL_ERROR
         }
-        
     }
 }
