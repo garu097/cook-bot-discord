@@ -36,6 +36,10 @@ export const COMMAND:ICommand = {
     SKIP_TO: {
         name: 'skipto',
         description: 'Skip to the number song you want in playlist'
+    },
+    VOLUME:{
+        name: 'volume',
+        description: 'Interact with volume sound'
     }
 }
 

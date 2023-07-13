@@ -1,5 +1,5 @@
 
-import { COMMAND_ERROR } from 'src/common/constant/error.constant';
+import { COMMAND_ERROR, INTERNAL_ERROR } from 'src/common/constant/error.constant';
 import {  Injectable, UseInterceptors } from '@nestjs/common';
 import { SlashCommandPipe, CollectorInterceptor } from '@discord-nestjs/common';
 
@@ -29,12 +29,16 @@ export class PlayCommand {
     @IA() interaction: CommandInteraction,
   ){
     try {
-      await interaction.deferReply()
+      this.logger.log("before defer")
+      await interaction.deferReply({ ephemeral: true })
+      this.logger.log("after derfer")
       const member: GuildMember = await interaction.guild.members.fetch({ user: interaction.user });
       const channel: VoiceBasedChannel = member.voice.channel
       if(!channel)
-          return await interaction.reply({ content: COMMAND_ERROR.NOT_IN_CHANNEL,  ephemeral: true })
+          return await interaction.editReply({ content: COMMAND_ERROR.NOT_IN_CHANNEL })
 
+      this.logger.log("before play")
+      
       if(isValidHttpUrl(dto.song)) {
         await this.distube.play(channel, dto.song)
         return await interaction.editReply({ content: `${PLAY_MUSIC} ${dto.song}`})
@@ -42,11 +46,12 @@ export class PlayCommand {
 
       const results = await this.distube.search(dto.song)
       await this.distube.play(channel, results[0])
+      this.logger.log("after play")
       return await interaction.editReply({ content: `${PLAY_MUSIC} ${results[0].name} - ${results[0].source} \n ${results[0].url}` })
       
     } catch (e) {
       this.logger.error(e)
-      return await interaction.editReply({ content: COMMAND_ERROR.CANNOT_PLAY_SONG })
+      return INTERNAL_ERROR
     }
   }
 }
