@@ -1,41 +1,30 @@
-# syntax = docker/dockerfile:1
-
-# Adjust NODE_VERSION as desired
+FROM debian:bullseye as builder
+ENV PATH=/usr/local/node/bin:$PATH
 ARG NODE_VERSION=18.16.1
-FROM node:${NODE_VERSION}-slim as base
 
-LABEL fly_launch_runtime="NestJS"
 
-# NestJS app lives here
+RUN apt-get update; apt install -y curl python-is-python3 pkg-config build-essential libtool && \
+    curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
+    /tmp/node-build-master/bin/node-build "${NODE_VERSION}" /usr/local/node && \
+    rm -rf /tmp/node-build-master
+
+RUN mkdir /app
 WORKDIR /app
 
-# Set production environment
-ENV NODE_ENV=build
+COPY . .
 
-# Throw-away build stage to reduce size of final image
-FROM base as build
-
-# Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install -y python-is-python3 pkg-config build-essential libtool
-
-# Install node modules
-COPY --link package-lock.json package.json ./
-RUN npm ci --include=dev
-
-# Copy application code
-COPY --link . .
-
-# Build application
-RUN npm run build
+RUN npm install && npm run build
 
 
-# Final stage for app image
-FROM base
-ENV NODE_ENV=production
-# Copy built application
-COPY --from=build /app /app
+FROM debian:bullseye-slim
 
-# Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
+LABEL fly_launch_runtime="nodejs"
+
+COPY --from=builder /usr/local/node /usr/local/node
+COPY --from=builder /app /app
+
+WORKDIR /app
+ENV NODE_ENV production
+ENV PATH /usr/local/node/bin:$PATH
+
 CMD [ "npm", "run", "start:prod" ]
