@@ -29,15 +29,11 @@ export class PlayCommand {
     @IA() interaction: CommandInteraction,
   ){
     try {
-      this.logger.log("before defer")
       await interaction.deferReply({ ephemeral: true })
-      this.logger.log("after derfer")
       const member: GuildMember = await interaction.guild.members.fetch({ user: interaction.user });
       const channel: VoiceBasedChannel = member.voice.channel
       if(!channel)
           return await interaction.editReply({ content: COMMAND_ERROR.NOT_IN_CHANNEL })
-
-      this.logger.log("before play")
       
       if(isValidHttpUrl(dto.song)) {
         await this.distube.play(channel, dto.song)
@@ -46,9 +42,7 @@ export class PlayCommand {
 
       const results = await this.distube.search(dto.song)
       await this.distube.play(channel, results[0])
-      this.logger.log("after play")
       return await interaction.editReply({ content: `${PLAY_MUSIC} ${results[0].name} - ${results[0].source} \n ${results[0].url}` })
-      
     } catch (e) {
       this.logger.error(e)
       return INTERNAL_ERROR
